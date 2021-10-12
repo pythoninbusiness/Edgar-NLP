@@ -11,3 +11,4 @@ An assortment of natural language processing techniques and applications to Edga
 ## Analyses to perform:
 - Extract sentences with high cosine similarity with other sentences. The rational is that sentences that are smiliar to other sentences may represent significant points the authors want to highlight. 
 - Extract sentences with TF-IDF
+- Extract positive, negative, litigious and uncertain sentences
