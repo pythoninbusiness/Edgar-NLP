@@ -4,11 +4,30 @@ from bs4 import BeautifulSoup
 from nltk.tokenize import sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+from typing import List
 from . import load
 import pandas as pd
 import unicodedata
 import string
 import re
+
+
+def clean_documents(documents_dirty: List[str]):
+    documents_clean = []
+    for document in documents_dirty:
+        # Remove Unicode
+        document_dirty = re.sub(r'[^\x00-\x7F]+', ' ', document)
+        # Remove Mentions
+        document_dirty = re.sub(r'@\w+', '', document_dirty)
+        # Lowercase the document
+        document_dirty = document_dirty.lower()
+        # Remove punctuations
+        document_dirty = re.sub(r'[%s]' % re.escape(string.punctuation), ' ', document_dirty)
+        # Lowercase the numbers
+        document_dirty = re.sub(r'[0-9]', '', document_dirty)
+        # Remove the doubled space
+        document_dirty = re.sub(r'\s{2,}', ' ', document_dirty)
+        documents_clean.append(document_dirty)
 
 
 def get_text_from_soup(soup_object, text_tag='span'):
