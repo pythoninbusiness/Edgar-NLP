@@ -3,10 +3,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 from . import textpreprocess
 
 
-def search_engine(query: str, list_of_options: list, limit=3, add_cols=list()):
+def search_engine(query: str, list_of_options: list, limit=3, add_cols=list(), model=None):
 
     """
     Purpose: Compare a search sentence (string) with a list of options (list of strings). Return the closest match using TF-IDF.
+    If we can't get a 70% cosine similarity, return the top two choices.
 
     Example:
     query = "FN6.1-Intangibles Summary-2Q21.xlsx"
@@ -22,14 +23,16 @@ def search_engine(query: str, list_of_options: list, limit=3, add_cols=list()):
     ('FN Goodwill Balance xlsx', 0.2443706761406413)]
     """
     
-    cleaned_sentence = textpreprocess.typical_preprocess([query])
+    cleaned_query = textpreprocess.typical_preprocess([query])
     cleaned_options = textpreprocess.typical_preprocess(list_of_options)
 
-    vectorizer = TfidfVectorizer(ngram_range=(1,1)).fit(cleaned_sentence)
-
-    search_vector = vectorizer.transform(cleaned_sentence).toarray()[0]
+    if model:
+        vectorizer = model
+    else:
+        vectorizer = TfidfVectorizer(ngram_range=(1,1)).fit(cleaned_options)
+        
+    search_vector = vectorizer.transform(cleaned_query).toarray()[0]
     option_vectors = vectorizer.transform(cleaned_options).toarray()
-
     similarity_scores = cosine_similarity(search_vector.reshape(1, -1), option_vectors)[0]
 
     if len(add_cols) > 0:
