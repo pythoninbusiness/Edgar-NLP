@@ -38,8 +38,9 @@ def remove_punctuation(list_of_documents):
 def remove_extra_spaces(list_of_documents):
     list_of_clean_docs = list()
     for doc in list_of_documents:
+        clean_doc = re.sub(r"\n", " ", doc)
         list_of_clean_docs.append(
-            re.sub(r"\s{2,}", " ", doc)
+            re.sub(r"\s{2,}", " ", clean_doc)
         )
     return list_of_clean_docs
 
