@@ -7,14 +7,13 @@ def search_engine(query: str, list_of_options: list, limit=3, add_cols=list()):
 
     """
     Purpose: Compare a search sentence (string) with a list of options (list of strings). Return the closest match using TF-IDF.
-    If we can't get a 70% cosine similarity, return the top two choices.
 
     Example:
-    search_string = "FN6.1-Intangibles Summary-2Q21.xlsx"
-    list_of_strings = [
+    query = "FN6.1-Intangibles Summary-2Q21.xlsx"
+    list_of_options = [
         'FN7.1-Intangibles Summary-3Q20 v1.xlsx', 'FN7.2-Intangibles Amortization-3Q20.xlsx', 'FN7.3-Intangibles Future Amort-3Q20 v1.xlsx', 'FN7.4-Goodwill Balance-3Q20.xlsx'
     ]
-    CompareStringWithOptions(search_string, list_of_strings)
+    search_engine(search_string, list_of_strings)
 
     output:
     [('FN Intangibles Summary xlsx', 1.0000000000000002),
