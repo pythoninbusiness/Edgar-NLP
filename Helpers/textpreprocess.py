@@ -12,22 +12,45 @@ import string
 import re
 
 
-def clean_documents(documents_dirty: List[str]):
-    documents_clean = []
-    for document in documents_dirty:
-        # Remove Unicode
-        document_dirty = re.sub(r'[^\x00-\x7F]+', ' ', document)
-        # Remove Mentions
-        document_dirty = re.sub(r'@\w+', '', document_dirty)
-        # Lowercase the document
-        document_dirty = document_dirty.lower()
-        # Remove punctuations
-        document_dirty = re.sub(r'[%s]' % re.escape(string.punctuation), ' ', document_dirty)
-        # Lowercase the numbers
-        document_dirty = re.sub(r'[0-9]', '', document_dirty)
-        # Remove the doubled space
-        document_dirty = re.sub(r'\s{2,}', ' ', document_dirty)
-        documents_clean.append(document_dirty)
+def remove_digits(list_of_documents):
+    list_of_docs_without_digits = list()
+    for doc in list_of_documents:
+        list_of_docs_without_digits.append(re.sub(r"\d+", " ", doc))
+    return list_of_docs_without_digits
+
+
+def lowercase(list_of_documents):
+    if type(list_of_documents) == pd.Series:
+        return list_of_documents.str.lower()
+    else:
+        return [doc.lower() for doc in list_of_documents]
+
+
+def remove_punctuation(list_of_documents):
+    list_of_docs_without_punct = list()
+    for doc in list_of_documents:
+        list_of_docs_without_punct.append(
+            re.sub(r'[%s]' % re.escape(string.punctuation + "’"), ' ', doc)
+        )
+    return list_of_docs_without_punct
+
+
+def remove_extra_spaces(list_of_documents):
+    list_of_clean_docs = list()
+    for doc in list_of_documents:
+        list_of_clean_docs.append(
+            re.sub(r"\s{2,}", " ", doc)
+        )
+    return list_of_clean_docs
+
+
+def typical_preprocess(list_of_documents):
+    list_of_clean_docs = remove_digits(list_of_documents)
+    list_of_clean_docs = lowercase(list_of_clean_docs)
+    list_of_clean_docs = remove_punctuation(list_of_clean_docs)
+    list_of_clean_docs = remove_extra_spaces(list_of_clean_docs)
+    list_of_clean_docs = [doc.strip() for doc in list_of_clean_docs]
+    return list_of_clean_docs
 
 
 def get_text_from_soup(soup_object, text_tag='span'):
