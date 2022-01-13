@@ -30,7 +30,7 @@ def remove_punctuation(list_of_documents):
     list_of_docs_without_punct = list()
     for doc in list_of_documents:
         list_of_docs_without_punct.append(
-            re.sub(r'[%s]' % re.escape(string.punctuation + "’"), ' ', doc)
+            re.sub(r'[%s]' % re.escape(string.punctuation + "’"), '', doc)
         )
     return list_of_docs_without_punct
 
